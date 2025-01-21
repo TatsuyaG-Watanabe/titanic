@@ -11,6 +11,7 @@ from hyperopt.pyll.base import scope
 from omegaconf import DictConfig
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score, train_test_split
+from sklearn.preprocessing import LabelEncoder
 
 
 def load_data(
@@ -54,12 +55,75 @@ def preprocess_data(X: pd.DataFrame) -> pd.DataFrame:
         ]["Fare"].median()
         X.at[i, "Fare"] = median_fare
 
-    # FareGroupの作成
-    X["FareGroup"] = pd.qcut(X["Fare"], 5, labels=False)
-
     # 数値列のみを対象にして欠損値を補完
     num_cols = X.select_dtypes(include=[np.number]).columns
     X[num_cols] = X[num_cols].fillna(X[num_cols].mean())
+
+    return X
+
+
+def feature_engineering(X: pd.DataFrame) -> pd.DataFrame:
+    """
+    特徴量エンジニアリングを行います。
+
+    Args:
+        X (pd.DataFrame): 特徴量データフレーム
+
+    Returns:
+        pd.DataFrame: 特徴量エンジニアリング後のデータフレーム
+    """
+    # TitleGroupの作成
+    X["Title"] = X["Name"].str.extract(" ([A-Za-z]+)\.", expand=False)
+    title_mapping = {
+        "Mr": "Mr",
+        "Miss": "Miss",
+        "Mrs": "Mrs",
+        "Master": "Master",
+        "Dr": "Officer",
+        "Rev": "Officer",
+        "Col": "Officer",
+        "Major": "Officer",
+        "Mlle": "Miss",
+        "Ms": "Miss",
+        "Lady": "Royalty",
+        "Sir": "Royalty",
+        "Mme": "Mrs",
+        "Capt": "Officer",
+        "Countess": "Royalty",
+        "Jonkheer": "Royalty",
+        "Don": "Royalty",
+        "Dona": "Royalty",
+    }
+    # TitleGroupの作成
+    X["Title"] = X["Name"].str.extract(" ([A-Za-z]+)\.", expand=False)
+    title_mapping = {
+        "Mr": "Mr",
+        "Miss": "Miss",
+        "Mrs": "Mrs",
+        "Master": "Master",
+        "Dr": "Other",
+        "Rev": "Other",
+        "Col": "Other",
+        "Major": "Other",
+        "Mlle": "Miss",
+        "Ms": "Miss",
+        "Lady": "Other",
+        "Sir": "Other",
+        "Mme": "Mrs",
+        "Capt": "Other",
+        "Countess": "Other",
+        "Jonkheer": "Other",
+        "Don": "Other",
+        "Dona": "Other",
+    }
+    X["TitleGroup"] = X["Title"].map(title_mapping)
+
+    # TitleGroupを数値に変換
+    le = LabelEncoder()
+    X["TitleGroup"] = le.fit_transform(X["TitleGroup"])
+
+    # FareGroupの作成
+    X["FareGroup"] = pd.qcut(X["Fare"], 5, labels=False)
 
     return X
 
@@ -209,7 +273,9 @@ def main(cfg: DictConfig) -> None:
 
     # データの前処理
     train_data = preprocess_data(train_data)
+    train_data = feature_engineering(train_data)
     test_data = preprocess_data(test_data)
+    test_data = feature_engineering(test_data)
 
     # 特徴量とターゲットに分割
     X = train_data[cfg.features]

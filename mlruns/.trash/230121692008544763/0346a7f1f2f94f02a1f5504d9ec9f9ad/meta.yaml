@@ -1,0 +1,16 @@
+artifact_uri: file:///C:/Users/0022001476/OneDrive%20-%20Sony/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88/Work/titanic/mlruns/230121692008544763/0346a7f1f2f94f02a1f5504d9ec9f9ad/artifacts
+deleted_time: 1737441775343
+end_time: null
+entry_point_name: ''
+experiment_id: '230121692008544763'
+lifecycle_stage: deleted
+run_id: 0346a7f1f2f94f02a1f5504d9ec9f9ad
+run_name: fearless-fish-787
+run_uuid: 0346a7f1f2f94f02a1f5504d9ec9f9ad
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737437960452
+status: 1
+tags: []
+user_id: '0022001476'

@@ -1,0 +1,16 @@
+artifact_uri: file:///C:/Users/0022001476/OneDrive%20-%20Sony/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88/Work/titanic/mlruns/840414240303678614/dc08500c26454e5c91a280b322e1d3b7/artifacts
+deleted_time: 1737441775329
+end_time: 1737440528398
+entry_point_name: ''
+experiment_id: '840414240303678614'
+lifecycle_stage: deleted
+run_id: dc08500c26454e5c91a280b322e1d3b7
+run_name: magnificent-rat-880
+run_uuid: dc08500c26454e5c91a280b322e1d3b7
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737440526068
+status: 3
+tags: []
+user_id: '0022001476'

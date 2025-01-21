@@ -1,0 +1,16 @@
+artifact_uri: file:///C:/Users/0022001476/OneDrive%20-%20Sony/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88/Work/titanic/mlruns/700783958398814089/8f98878dd88c40d4b38f6dbacf08b7c3/artifacts
+deleted_time: 1737441775326
+end_time: 1737440469069
+entry_point_name: ''
+experiment_id: '700783958398814089'
+lifecycle_stage: deleted
+run_id: 8f98878dd88c40d4b38f6dbacf08b7c3
+run_name: polite-loon-158
+run_uuid: 8f98878dd88c40d4b38f6dbacf08b7c3
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737440467414
+status: 3
+tags: []
+user_id: '0022001476'

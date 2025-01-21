@@ -1,0 +1,16 @@
+artifact_uri: file:///C:/Users/0022001476/OneDrive%20-%20Sony/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88/Work/titanic/mlruns/679264001174632061/1c09bdcdf6c84da49a9f59145fe9a7bb/artifacts
+deleted_time: 1737447453286
+end_time: 1737446940421
+entry_point_name: ''
+experiment_id: '679264001174632061'
+lifecycle_stage: deleted
+run_id: 1c09bdcdf6c84da49a9f59145fe9a7bb
+run_name: caring-deer-84
+run_uuid: 1c09bdcdf6c84da49a9f59145fe9a7bb
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737446938511
+status: 3
+tags: []
+user_id: '0022001476'
