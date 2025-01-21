@@ -10,7 +10,6 @@ features:
   - "Parch"
   - "Fare"
   - "Embarked"
-  - "FareGroup"
 
 target: "Perished"
 
@@ -19,5 +18,11 @@ split:
   random_state: 42
 
 model:
+  n_estimators:
+    min: 10
+    max: 200
+  n_trials: 20
   cv: 5
-  max_evals: 20
+  max_depth:
+    min: 2
+    max: 32

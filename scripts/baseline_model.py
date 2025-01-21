@@ -6,29 +6,33 @@ import mlflow
 import mlflow.sklearn
 import numpy as np
 import pandas as pd
-from hyperopt import Trials, fmin, hp, tpe
-from hyperopt.pyll.base import scope
+from hyperopt import STATUS_OK, Trials, fmin, hp, tpe
 from omegaconf import DictConfig
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import cross_val_score, train_test_split
 
 
 def load_data(
-    train_path: str, test_path: str
-) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    train_path: str, test_path: str, features: List[str], target: str
+) -> Tuple[pd.DataFrame, pd.Series, pd.DataFrame]:
     """
-    データを読み込みます。
+    データを読み込み、特徴量とターゲットに分割します。
 
     Args:
         train_path (str): 訓練データのパス
         test_path (str): テストデータのパス
+        features (list): 使用する特徴量のリスト
+        target (str): 予測対象のターゲット列名
 
     Returns:
-        tuple: 訓練データとテストデータのタプル
+        tuple: 特徴量、ターゲット、テストデータのタプル
     """
     train_data = pd.read_csv(train_path)
     test_data = pd.read_csv(test_path)
-    return train_data, test_data
+    X = train_data[features]
+    y = train_data[target]
+    return X, y, test_data
 
 
 def preprocess_data(X: pd.DataFrame) -> pd.DataFrame:
@@ -43,25 +47,7 @@ def preprocess_data(X: pd.DataFrame) -> pd.DataFrame:
     """
     X["Sex"] = X["Sex"].map({"male": 0, "female": 1})
     X["Embarked"] = X["Embarked"].map({"S": 0, "C": 1, "Q": 2})
-
-    # Fareの欠損値補完
-    for i, row in X[X["Fare"].isnull()].iterrows():
-        median_fare = X[
-            (X["Pclass"] == row["Pclass"])
-            & (X["Embarked"] == row["Embarked"])
-            & (X["SibSp"] == row["SibSp"])
-            & (X["Parch"] == row["Parch"])
-        ]["Fare"].median()
-        X.at[i, "Fare"] = median_fare
-
-    # FareGroupの作成
-    X["FareGroup"] = pd.qcut(X["Fare"], 5, labels=False)
-
-    # 数値列のみを対象にして欠損値を補完
-    num_cols = X.select_dtypes(include=[np.number]).columns
-    X[num_cols] = X[num_cols].fillna(X[num_cols].mean())
-
-    return X
+    return X.fillna(X.mean())
 
 
 def optimize_hyperparameters(
@@ -79,37 +65,41 @@ def optimize_hyperparameters(
         dict: 最適化されたハイパーパラメータ
     """
 
-    def objective(params: Dict[str, float]) -> float:
+    def objective(params: Dict[str, float]) -> Dict[str, float]:
         clf = RandomForestClassifier(
             n_estimators=int(params["n_estimators"]),
             max_depth=int(params["max_depth"]),
             random_state=cfg.split.random_state,
         )
-        score = cross_val_score(
-            clf, X, y, cv=cfg.model.cv, scoring="accuracy"
-        ).mean()
-        return -score
+        score = cross_val_score(clf, X, y, cv=cfg.model.cv).mean()
+        return {"loss": -score, "status": STATUS_OK}  # type: ignore
 
-    search_space = {
-        "n_estimators": scope.int(hp.quniform("n_estimators", 50, 200, 10)),
-        "max_depth": scope.int(hp.quniform("max_depth", 5, 30, 1)),
+    space = {
+        "n_estimators": hp.quniform(
+            "n_estimators",
+            cfg.model.n_estimators.min,
+            cfg.model.n_estimators.max,
+            1,
+        ),
+        "max_depth": hp.quniform(
+            "max_depth", cfg.model.max_depth.min, cfg.model.max_depth.max, 1
+        ),
     }
 
     trials = Trials()
-    best_params = fmin(
+    best = fmin(
         fn=objective,
-        space=search_space,
+        space=space,
         algo=tpe.suggest,
-        max_evals=cfg.model.max_evals,
+        max_evals=cfg.model.n_trials,
         trials=trials,
+        rstate=np.random.default_rng(cfg.split.random_state),
     )
 
-    if best_params is None:
-        best_params = {}
-
-    best_params = {k: float(v) for k, v in best_params.items()}
-
-    return best_params
+    if best:
+        best["n_estimators"] = int(best["n_estimators"])  # type: ignore
+        best["max_depth"] = int(best["max_depth"])  # type: ignore
+    return best  # type: ignore
 
 
 def train_and_evaluate_model(
@@ -120,7 +110,7 @@ def train_and_evaluate_model(
     cv: int,
 ) -> Tuple[RandomForestClassifier, float]:
     """
-    モデルの訓練と評価を行います。
+    モデルを訓練し、評価を行います。
 
     Args:
         X (pd.DataFrame): 特徴量データフレーム
@@ -130,7 +120,7 @@ def train_and_evaluate_model(
         cv (int): クロスバリデーションの分割数
 
     Returns:
-        tuple: 訓練されたモデルと評価スコア
+        tuple: 訓練されたモデルと評価精度
     """
     model = RandomForestClassifier(
         n_estimators=int(best_params["n_estimators"]),
@@ -138,7 +128,8 @@ def train_and_evaluate_model(
         random_state=random_state,
     )
     model.fit(X, y)
-    accuracy = cross_val_score(model, X, y, cv=cv, scoring="accuracy").mean()
+    accuracy = cross_val_score(model, X, y, cv=cv).mean()
+    print(f"Validation Accuracy: {accuracy}")
     return model, accuracy
 
 
@@ -149,11 +140,11 @@ def log_results(
     model: RandomForestClassifier,
 ) -> None:
     """
-    結果をMLflowにログとして記録します。
+    モデルの結果をMLflowにログとして記録します。
 
     Args:
         best_params (dict): 最適化されたハイパーパラメータ
-        accuracy (float): 評価スコア
+        accuracy (float): モデルの精度
         features (list): 使用した特徴量のリスト
         model (sklearn.base.BaseEstimator): 訓練されたモデル
     """
@@ -178,10 +169,6 @@ def save_predictions(
         model (sklearn.base.BaseEstimator): 訓練されたモデル
         current_time (str): 現在の時刻を表す文字列
     """
-    # 数値列のみを対象にして欠損値を補完
-    num_cols = X_test.select_dtypes(include=[np.number]).columns
-    X_test[num_cols] = X_test[num_cols].fillna(X_test[num_cols].mean())
-
     predictions = model.predict(X_test)
     output_path = f"./results/{current_time}.csv"
     output = pd.DataFrame(
@@ -204,16 +191,11 @@ def main(cfg: DictConfig) -> None:
     mlflow.set_experiment(experiment_name)
     mlflow.start_run()
 
-    # データの読み込み
-    train_data, test_data = load_data(cfg.data.train_path, cfg.data.test_path)
-
-    # データの前処理
-    train_data = preprocess_data(train_data)
-    test_data = preprocess_data(test_data)
-
-    # 特徴量とターゲットに分割
-    X = train_data[cfg.features]
-    y = train_data[cfg.target]
+    # データの読み込みと前処理
+    X, y, test_data = load_data(
+        cfg.data.train_path, cfg.data.test_path, cfg.features, cfg.target
+    )
+    X = preprocess_data(X)
 
     # ハイパーパラメータの最適化
     best_params = optimize_hyperparameters(X, y, cfg)
@@ -227,7 +209,7 @@ def main(cfg: DictConfig) -> None:
     log_results(best_params, accuracy, cfg.features, model)
 
     # テストデータの前処理
-    X_test = test_data[cfg.features]
+    X_test = preprocess_data(test_data[cfg.features])
 
     # 予測結果の保存
     save_predictions(test_data, X_test, model, current_time)
