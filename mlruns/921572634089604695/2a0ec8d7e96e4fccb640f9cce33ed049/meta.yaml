@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/0022001476/OneDrive%20-%20Sony/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88/Work/titanic/mlruns/921572634089604695/2a0ec8d7e96e4fccb640f9cce33ed049/artifacts
+end_time: 1737448909329
+entry_point_name: ''
+experiment_id: '921572634089604695'
+lifecycle_stage: active
+run_id: 2a0ec8d7e96e4fccb640f9cce33ed049
+run_name: intrigued-toad-498
+run_uuid: 2a0ec8d7e96e4fccb640f9cce33ed049
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737448907259
+status: 3
+tags: []
+user_id: '0022001476'
