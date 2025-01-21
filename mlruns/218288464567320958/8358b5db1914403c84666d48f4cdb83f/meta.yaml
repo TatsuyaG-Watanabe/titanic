@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/0022001476/OneDrive%20-%20Sony/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88/Work/titanic/mlruns/218288464567320958/8358b5db1914403c84666d48f4cdb83f/artifacts
+end_time: 1737440979950
+entry_point_name: ''
+experiment_id: '218288464567320958'
+lifecycle_stage: active
+run_id: 8358b5db1914403c84666d48f4cdb83f
+run_name: tasteful-wren-644
+run_uuid: 8358b5db1914403c84666d48f4cdb83f
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737440932788
+status: 3
+tags: []
+user_id: '0022001476'
