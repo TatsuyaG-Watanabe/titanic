@@ -1,0 +1,16 @@
+artifact_uri: file:///C:/Users/0022001476/OneDrive%20-%20Sony/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88/Work/titanic/mlruns/858182127963762891/e51a8e24f0394b4ea769cb19b21e8dc1/artifacts
+deleted_time: 1737436512255
+end_time: 1737435061780
+entry_point_name: ''
+experiment_id: '858182127963762891'
+lifecycle_stage: deleted
+run_id: e51a8e24f0394b4ea769cb19b21e8dc1
+run_name: nebulous-bee-909
+run_uuid: e51a8e24f0394b4ea769cb19b21e8dc1
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737435013738
+status: 3
+tags: []
+user_id: '0022001476'

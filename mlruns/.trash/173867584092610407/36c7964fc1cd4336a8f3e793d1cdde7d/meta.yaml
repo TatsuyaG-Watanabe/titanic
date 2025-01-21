@@ -1,0 +1,16 @@
+artifact_uri: file:///C:/Users/0022001476/OneDrive%20-%20Sony/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88/Work/titanic/mlruns/173867584092610407/36c7964fc1cd4336a8f3e793d1cdde7d/artifacts
+deleted_time: 1737436509653
+end_time: 1737426183736
+entry_point_name: ''
+experiment_id: '173867584092610407'
+lifecycle_stage: deleted
+run_id: 36c7964fc1cd4336a8f3e793d1cdde7d
+run_name: resilient-frog-253
+run_uuid: 36c7964fc1cd4336a8f3e793d1cdde7d
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737426095335
+status: 3
+tags: []
+user_id: '0022001476'

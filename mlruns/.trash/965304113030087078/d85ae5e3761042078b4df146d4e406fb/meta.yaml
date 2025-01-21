@@ -1,0 +1,16 @@
+artifact_uri: file:///C:/Users/0022001476/OneDrive%20-%20Sony/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88/Work/titanic/mlruns/965304113030087078/d85ae5e3761042078b4df146d4e406fb/artifacts
+deleted_time: 1737436506804
+end_time: 1737435582015
+entry_point_name: ''
+experiment_id: '965304113030087078'
+lifecycle_stage: deleted
+run_id: d85ae5e3761042078b4df146d4e406fb
+run_name: spiffy-sheep-296
+run_uuid: d85ae5e3761042078b4df146d4e406fb
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737435540626
+status: 3
+tags: []
+user_id: '0022001476'

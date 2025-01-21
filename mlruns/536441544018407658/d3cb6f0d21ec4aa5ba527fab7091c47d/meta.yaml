@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/0022001476/OneDrive%20-%20Sony/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88/Work/titanic/mlruns/536441544018407658/d3cb6f0d21ec4aa5ba527fab7091c47d/artifacts
+end_time: 1737436049281
+entry_point_name: ''
+experiment_id: '536441544018407658'
+lifecycle_stage: active
+run_id: d3cb6f0d21ec4aa5ba527fab7091c47d
+run_name: zealous-bug-703
+run_uuid: d3cb6f0d21ec4aa5ba527fab7091c47d
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737436006301
+status: 3
+tags: []
+user_id: '0022001476'

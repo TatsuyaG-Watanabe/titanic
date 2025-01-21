@@ -1,0 +1,16 @@
+artifact_uri: file:///C:/Users/0022001476/OneDrive%20-%20Sony/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88/Work/titanic/mlruns/317833692513820118/c6a627e5b79f45f1b2aa35ef5b4966f2/artifacts
+deleted_time: 1737436518248
+end_time: 1737435505650
+entry_point_name: ''
+experiment_id: '317833692513820118'
+lifecycle_stage: deleted
+run_id: c6a627e5b79f45f1b2aa35ef5b4966f2
+run_name: nebulous-dolphin-838
+run_uuid: c6a627e5b79f45f1b2aa35ef5b4966f2
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737435471681
+status: 3
+tags: []
+user_id: '0022001476'
