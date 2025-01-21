@@ -1,0 +1,19 @@
+data:
+  train_path: ./data/train.csv
+  test_path: ./data/test.csv
+features:
+- Pclass
+- Sex
+- Age
+- SibSp
+- Parch
+- Fare
+- Embarked
+- FareGroup
+target: Perished
+split:
+  test_size: 0.2
+  random_state: 42
+model:
+  cv: 5
+  max_evals: 20
