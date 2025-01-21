@@ -1,0 +1,27 @@
+[2025-01-21 17:08:58,679][hyperopt.tpe][INFO] - build_posterior_wrapper took 0.000000 seconds
+[2025-01-21 17:08:58,679][hyperopt.tpe][INFO] - TPE using 0 trials
+[2025-01-21 17:08:58,723][hyperopt.fmin][ERROR] - job exception: 
+All the 5 fits failed.
+It is very likely that your model is misconfigured.
+You can try to debug the error by setting error_score='raise'.
+
+Below are more details about the failures:
+--------------------------------------------------------------------------------
+5 fits failed with the following error:
+Traceback (most recent call last):
+  File "C:\Users\0022001476\AppData\Local\Programs\Python\Python39\lib\site-packages\sklearn\model_selection\_validation.py", line 686, in _fit_and_score
+    estimator.fit(X_train, y_train, **fit_params)
+  File "C:\Users\0022001476\AppData\Local\Programs\Python\Python39\lib\site-packages\sklearn\ensemble\_forest.py", line 346, in fit
+    X, y = self._validate_data(
+  File "C:\Users\0022001476\AppData\Local\Programs\Python\Python39\lib\site-packages\sklearn\base.py", line 554, in _validate_data
+    X, y = check_X_y(X, y, **check_params)
+  File "C:\Users\0022001476\AppData\Local\Programs\Python\Python39\lib\site-packages\sklearn\utils\validation.py", line 1104, in check_X_y
+    X = check_array(
+  File "C:\Users\0022001476\AppData\Local\Programs\Python\Python39\lib\site-packages\sklearn\utils\validation.py", line 877, in check_array
+    array = _asarray_with_order(array, order=order, dtype=dtype, xp=xp)
+  File "C:\Users\0022001476\AppData\Local\Programs\Python\Python39\lib\site-packages\sklearn\utils\_array_api.py", line 185, in _asarray_with_order
+    array = numpy.asarray(array, order=order, dtype=dtype)
+  File "C:\Users\0022001476\AppData\Local\Programs\Python\Python39\lib\site-packages\pandas\core\generic.py", line 2153, in __array__
+    arr = np.asarray(values, dtype=dtype)
+ValueError: could not convert string to float: 'Mr'
+

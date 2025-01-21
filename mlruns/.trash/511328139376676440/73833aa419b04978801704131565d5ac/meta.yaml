@@ -1,0 +1,16 @@
+artifact_uri: file:///C:/Users/0022001476/OneDrive%20-%20Sony/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88/Work/titanic/mlruns/511328139376676440/73833aa419b04978801704131565d5ac/artifacts
+deleted_time: 1737441836449
+end_time: 1737435945013
+entry_point_name: ''
+experiment_id: '511328139376676440'
+lifecycle_stage: deleted
+run_id: 73833aa419b04978801704131565d5ac
+run_name: ambitious-gnat-262
+run_uuid: 73833aa419b04978801704131565d5ac
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737435907427
+status: 3
+tags: []
+user_id: '0022001476'

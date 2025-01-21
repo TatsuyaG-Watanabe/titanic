@@ -11,6 +11,7 @@ features:
   - "Fare"
   - "Embarked"
   - "FareGroup"
+  - "TitleGroup"
 
 target: "Perished"
 
