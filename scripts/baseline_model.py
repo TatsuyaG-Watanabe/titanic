@@ -42,8 +42,8 @@ def preprocess_data(X: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: 前処理後の特徴量データフレーム
     """
-    X["Sex"] = X["Sex"].map({"male": 0, "female": 1})
-    X["Embarked"] = X["Embarked"].map({"S": 0, "C": 1, "Q": 2})
+    # Embarkedの欠損値補完
+    X["Embarked"] = X["Embarked"].fillna(X["Embarked"].mode()[0])
 
     # Fareの欠損値補完
     for i, row in X[X["Fare"].isnull()].iterrows():
@@ -79,28 +79,6 @@ def feature_engineering(X: pd.DataFrame) -> pd.DataFrame:
         "Miss": "Miss",
         "Mrs": "Mrs",
         "Master": "Master",
-        "Dr": "Officer",
-        "Rev": "Officer",
-        "Col": "Officer",
-        "Major": "Officer",
-        "Mlle": "Miss",
-        "Ms": "Miss",
-        "Lady": "Royalty",
-        "Sir": "Royalty",
-        "Mme": "Mrs",
-        "Capt": "Officer",
-        "Countess": "Royalty",
-        "Jonkheer": "Royalty",
-        "Don": "Royalty",
-        "Dona": "Royalty",
-    }
-    # TitleGroupの作成
-    X["Title"] = X["Name"].str.extract(" ([A-Za-z]+)\.", expand=False)
-    title_mapping = {
-        "Mr": "Mr",
-        "Miss": "Miss",
-        "Mrs": "Mrs",
-        "Master": "Master",
         "Dr": "Other",
         "Rev": "Other",
         "Col": "Other",
@@ -117,10 +95,6 @@ def feature_engineering(X: pd.DataFrame) -> pd.DataFrame:
         "Dona": "Other",
     }
     X["TitleGroup"] = X["Title"].map(title_mapping)
-
-    # TitleGroupを数値に変換
-    le = LabelEncoder()
-    X["TitleGroup"] = le.fit_transform(X["TitleGroup"])
 
     # FareGroupの作成
     X["FareGroup"] = pd.qcut(X["Fare"], 5, labels=False)
@@ -273,9 +247,17 @@ def main(cfg: DictConfig) -> None:
 
     # データの前処理
     train_data = preprocess_data(train_data)
-    train_data = feature_engineering(train_data)
     test_data = preprocess_data(test_data)
+
+    # 特徴量エンジニアリング
+    train_data = feature_engineering(train_data)
     test_data = feature_engineering(test_data)
+
+    # カテゴリ変数を数値に変換
+    le = LabelEncoder()
+    for col in ["Sex", "Embarked", "TitleGroup"]:
+        train_data[col] = le.fit_transform(train_data[col])
+        test_data[col] = le.transform(test_data[col])
 
     # 特徴量とターゲットに分割
     X = train_data[cfg.features]

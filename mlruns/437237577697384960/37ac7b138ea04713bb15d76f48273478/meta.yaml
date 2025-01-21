@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/0022001476/OneDrive%20-%20Sony/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88/Work/titanic/mlruns/437237577697384960/37ac7b138ea04713bb15d76f48273478/artifacts
+end_time: 1737449089090
+entry_point_name: ''
+experiment_id: '437237577697384960'
+lifecycle_stage: active
+run_id: 37ac7b138ea04713bb15d76f48273478
+run_name: fun-goose-235
+run_uuid: 37ac7b138ea04713bb15d76f48273478
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737449014390
+status: 3
+tags: []
+user_id: '0022001476'
