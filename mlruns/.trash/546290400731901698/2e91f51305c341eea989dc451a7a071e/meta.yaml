@@ -1,0 +1,16 @@
+artifact_uri: file:///C:/Users/0022001476/OneDrive%20-%20Sony/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88/Work/titanic/mlruns/546290400731901698/2e91f51305c341eea989dc451a7a071e/artifacts
+deleted_time: 1737436490019
+end_time: 1737424688064
+entry_point_name: ''
+experiment_id: '546290400731901698'
+lifecycle_stage: deleted
+run_id: 2e91f51305c341eea989dc451a7a071e
+run_name: bemused-shark-133
+run_uuid: 2e91f51305c341eea989dc451a7a071e
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737424674945
+status: 3
+tags: []
+user_id: '0022001476'
