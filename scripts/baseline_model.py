@@ -10,7 +10,7 @@ from hyperopt import Trials, fmin, hp, tpe
 from hyperopt.pyll.base import scope
 from omegaconf import DictConfig
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import cross_val_score, train_test_split
+from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import LabelEncoder
 
 
@@ -55,23 +55,9 @@ def preprocess_data(X: pd.DataFrame) -> pd.DataFrame:
         ]["Fare"].median()
         X.at[i, "Fare"] = median_fare
 
-    # 数値列のみを対象にして欠損値を補完
-    num_cols = X.select_dtypes(include=[np.number]).columns
-    X[num_cols] = X[num_cols].fillna(X[num_cols].mean())
+    # FareGroupの作成
+    X["FareGroup"] = pd.qcut(X["Fare"], 5, labels=False)
 
-    return X
-
-
-def feature_engineering(X: pd.DataFrame) -> pd.DataFrame:
-    """
-    特徴量エンジニアリングを行います。
-
-    Args:
-        X (pd.DataFrame): 特徴量データフレーム
-
-    Returns:
-        pd.DataFrame: 特徴量エンジニアリング後のデータフレーム
-    """
     # TitleGroupの作成
     X["Title"] = X["Name"].str.extract(" ([A-Za-z]+)\.", expand=False)
     title_mapping = {
@@ -96,8 +82,29 @@ def feature_engineering(X: pd.DataFrame) -> pd.DataFrame:
     }
     X["TitleGroup"] = X["Title"].map(title_mapping)
 
-    # FareGroupの作成
-    X["FareGroup"] = pd.qcut(X["Fare"], 5, labels=False)
+    # Ageの欠損値補完
+    for pclass in X["Pclass"].unique():
+        for title in X["TitleGroup"].unique():
+            median_age = X[
+                (X["Pclass"] == pclass)
+                & (X["TitleGroup"] == title)
+                & (X["Age"].notnull())
+            ]["Age"].median()
+            X.loc[
+                (X["Pclass"] == pclass)
+                & (X["TitleGroup"] == title)
+                & (X["Age"].isnull()),
+                "Age",
+            ] = median_age
+
+    # 数値列のみを対象にして欠損値を補完
+    num_cols = X.select_dtypes(include=[np.number]).columns
+    X[num_cols] = X[num_cols].fillna(X[num_cols].mean())
+
+    # カテゴリ変数を数値に変換
+    le = LabelEncoder()
+    for col in ["Sex", "Embarked", "TitleGroup"]:
+        X[col] = le.fit_transform(X[col])
 
     return X
 
@@ -216,10 +223,6 @@ def save_predictions(
         model (sklearn.base.BaseEstimator): 訓練されたモデル
         current_time (str): 現在の時刻を表す文字列
     """
-    # 数値列のみを対象にして欠損値を補完
-    num_cols = X_test.select_dtypes(include=[np.number]).columns
-    X_test[num_cols] = X_test[num_cols].fillna(X_test[num_cols].mean())
-
     predictions = model.predict(X_test)
     output_path = f"./results/{current_time}.csv"
     output = pd.DataFrame(
@@ -245,19 +248,9 @@ def main(cfg: DictConfig) -> None:
     # データの読み込み
     train_data, test_data = load_data(cfg.data.train_path, cfg.data.test_path)
 
-    # データの前処理
+    # データの前処理と特徴量エンジニアリング
     train_data = preprocess_data(train_data)
     test_data = preprocess_data(test_data)
-
-    # 特徴量エンジニアリング
-    train_data = feature_engineering(train_data)
-    test_data = feature_engineering(test_data)
-
-    # カテゴリ変数を数値に変換
-    le = LabelEncoder()
-    for col in ["Sex", "Embarked", "TitleGroup"]:
-        train_data[col] = le.fit_transform(train_data[col])
-        test_data[col] = le.transform(test_data[col])
 
     # 特徴量とターゲットに分割
     X = train_data[cfg.features]
