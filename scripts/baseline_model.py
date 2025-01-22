@@ -100,6 +100,20 @@ def preprocess_data(X: pd.DataFrame) -> pd.DataFrame:
     # AgeGroupの作成
     X["AgeGroup"] = pd.qcut(X["Age"], 6, labels=False)
 
+    # Cabinの欠損値補完
+    for i, row in X[X["Cabin"].isnull()].iterrows():
+        same_ticket_records = X[X["Ticket"] == row["Ticket"]]
+        if not same_ticket_records[
+            same_ticket_records["Cabin"].notnull()
+        ].empty:
+            most_frequent_cabin = same_ticket_records["Cabin"].mode()[0]
+            X.at[i, "Cabin"] = most_frequent_cabin
+        else:
+            X.at[i, "Cabin"] = "Z"
+
+    # CabinKeyの作成
+    X["CabinKey"] = X["Cabin"].apply(lambda x: x[:2] + str(len(x)))
+
     # 数値列のみを対象にして欠損値を補完
     num_cols = X.select_dtypes(include=[np.number]).columns
     X[num_cols] = X[num_cols].fillna(X[num_cols].mean())
