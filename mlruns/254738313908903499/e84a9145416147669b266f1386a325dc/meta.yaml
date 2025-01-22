@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/0022001476/OneDrive%20-%20Sony/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88/Work/titanic/mlruns/254738313908903499/e84a9145416147669b266f1386a325dc/artifacts
+end_time: 1737527145403
+entry_point_name: ''
+experiment_id: '254738313908903499'
+lifecycle_stage: active
+run_id: e84a9145416147669b266f1386a325dc
+run_name: resilient-grouse-271
+run_uuid: e84a9145416147669b266f1386a325dc
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737527090036
+status: 3
+tags: []
+user_id: '0022001476'
