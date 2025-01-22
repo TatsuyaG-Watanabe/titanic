@@ -114,6 +114,18 @@ def preprocess_data(X: pd.DataFrame) -> pd.DataFrame:
     # CabinKeyの作成
     X["CabinKey"] = X["Cabin"].apply(lambda x: x[:2] + str(len(x)))
 
+    # FamilyIDの作成
+    X["FamilyName"] = X["Name"].apply(lambda name: name.split(",")[0])
+    X["FamilyID"] = X.groupby(["FamilyName", "Embarked", "Pclass", "Cabin"])[
+        "PassengerId"
+    ].transform("min")
+
+    # FamilyScaleの作成
+    X["FamilySize"] = X.groupby("FamilyID")["PassengerId"].transform("count")
+    X["FamilyScale"] = X["FamilySize"].apply(
+        lambda x: 0 if x == 1 else (1 if 2 <= x <= 4 else 2)
+    )
+
     # 数値列のみを対象にして欠損値を補完
     num_cols = X.select_dtypes(include=[np.number]).columns
     X[num_cols] = X[num_cols].fillna(X[num_cols].mean())
@@ -266,8 +278,14 @@ def main(cfg: DictConfig) -> None:
     train_data, test_data = load_data(cfg.data.train_path, cfg.data.test_path)
 
     # データの前処理と特徴量エンジニアリング
-    train_data = preprocess_data(train_data)
-    test_data = preprocess_data(test_data)
+    combined_data = pd.concat([train_data, test_data], sort=False)
+    combined_data = preprocess_data(combined_data)
+    train_data = combined_data[
+        combined_data["PassengerId"].isin(train_data["PassengerId"])
+    ]
+    test_data = combined_data[
+        combined_data["PassengerId"].isin(test_data["PassengerId"])
+    ]
 
     # 特徴量とターゲットに分割
     X = train_data[cfg.features]

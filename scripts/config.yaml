@@ -6,10 +6,9 @@ features:
   - "Pclass"
   - "Sex"
   - "FareGroup"
+  - "FamilyScale"
   - "AgeGroup"
   - "TitleGroup"
-  - "SibSp"
-  - "Parch"
 
 target: "Perished"
 
