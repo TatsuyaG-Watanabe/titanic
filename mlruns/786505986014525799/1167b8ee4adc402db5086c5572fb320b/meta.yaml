@@ -1,8 +1,9 @@
 artifact_uri: file:///C:/Users/0022001476/OneDrive%20-%20Sony/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88/Work/titanic/mlruns/786505986014525799/1167b8ee4adc402db5086c5572fb320b/artifacts
+deleted_time: 1737524675281
 end_time: 1737448662416
 entry_point_name: ''
 experiment_id: '786505986014525799'
-lifecycle_stage: active
+lifecycle_stage: deleted
 run_id: 1167b8ee4adc402db5086c5572fb320b
 run_name: luminous-loon-41
 run_uuid: 1167b8ee4adc402db5086c5572fb320b

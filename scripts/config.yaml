@@ -5,13 +5,11 @@ data:
 features:
   - "Pclass"
   - "Sex"
-  - "Age"
+  - "FareGroup"
+  - "AgeGroup"
+  - "TitleGroup"
   - "SibSp"
   - "Parch"
-  - "Fare"
-  - "Embarked"
-  - "FareGroup"
-  - "TitleGroup"
 
 target: "Perished"
 
