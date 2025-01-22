@@ -126,9 +126,34 @@ def preprocess_data(X: pd.DataFrame) -> pd.DataFrame:
         lambda x: 0 if x == 1 else (1 if 2 <= x <= 4 else 2)
     )
 
-    # 数値列のみを対象にして欠損値を補完
-    num_cols = X.select_dtypes(include=[np.number]).columns
-    X[num_cols] = X[num_cols].fillna(X[num_cols].mean())
+    # テストデータに対する例外的な乗客の属性を変更
+    test_data = X[X["Perished"].isnull()]
+
+    # TitleGroupがMrなのに生存した乗客と同じ家族の乗客、またはCabinが近い乗客は全員生存したと考え、Sex=female、Pclass=1、TitleGroup=Mrsに変更
+    mr_survivors = X[(X["TitleGroup"] == "Mr") & (X["Perished"] == 0)]
+    for _, row in mr_survivors.iterrows():
+        family_id = row["FamilyID"]
+        cabin_key = row["CabinKey"]
+        test_data.loc[
+            (test_data["FamilyID"] == family_id)
+            | (test_data["CabinKey"] == cabin_key),
+            ["Sex", "Pclass", "TitleGroup"],
+        ] = ["female", 1, "Mrs"]
+
+    # TitleGroupがMrsまたはMissなのに死亡した乗客と同じ家族の乗客、またはCabinが近い乗客は全員死亡したと考え、Sex=male、Pclass=3、TitleGroup=Mrに変更
+    mrs_miss_deceased = X[
+        (X["TitleGroup"].isin(["Mrs", "Miss"])) & (X["Perished"] == 1)
+    ]
+    for _, row in mrs_miss_deceased.iterrows():
+        family_id = row["FamilyID"]
+        cabin_key = row["CabinKey"]
+        test_data.loc[
+            (test_data["FamilyID"] == family_id)
+            | (test_data["CabinKey"] == cabin_key),
+            ["Sex", "Pclass", "TitleGroup"],
+        ] = ["male", 3, "Mr"]
+
+    X.update(test_data)
 
     # カテゴリ変数を数値に変換
     le = LabelEncoder()
