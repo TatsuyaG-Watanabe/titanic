@@ -97,6 +97,9 @@ def preprocess_data(X: pd.DataFrame) -> pd.DataFrame:
                 "Age",
             ] = median_age
 
+    # AgeGroupの作成
+    X["AgeGroup"] = pd.qcut(X["Age"], 6, labels=False)
+
     # 数値列のみを対象にして欠損値を補完
     num_cols = X.select_dtypes(include=[np.number]).columns
     X[num_cols] = X[num_cols].fillna(X[num_cols].mean())
